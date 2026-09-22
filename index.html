@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Abri Direct — Locations à Songon Agban et route de Dabou</title>
+  <meta name="description" content="Trouvez un logement à louer à Songon Agban et sur la route de Dabou, en contact direct avec le propriétaire." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container">
+      <a href="index.html" class="logo">Abri<span>Direct</span></a>
+      <nav class="main-nav">
+        <a href="index.html" aria-current="page">Accueil</a>
+        <a href="annonces.html">Annonces</a>
+        <a href="deposer.html" class="btn-nav">Déposer une annonce</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <h1>Se loger à Songon Agban et sur la route de Dabou.</h1>
+      <p class="lede">Toutes les annonces de location du quartier, avec un contact direct vers le propriétaire — sans passer par un intermédiaire.</p>
+
+      <form class="search-bar" id="search-form" onsubmit="lancerRecherche(event)">
+        <select id="s-quartier">
+          <option value="">Tous les quartiers</option>
+          <option value="Songon Agban">Songon Agban</option>
+          <option value="Route de Dabou">Route de Dabou</option>
+        </select>
+        <select id="s-type">
+          <option value="">Tous les types</option>
+          <option value="Studio">Studio</option>
+          <option value="Chambre">Chambre</option>
+          <option value="Appartement">Appartement</option>
+          <option value="Maison">Maison</option>
+        </select>
+        <input type="number" id="s-prix" placeholder="Prix max (FCFA)" min="0" step="1000" />
+        <button type="submit" class="btn btn-primary">Rechercher</button>
+      </form>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <h2>Annonces récentes</h2>
+        <a href="annonces.html" class="see-all">Voir toutes les annonces</a>
+      </div>
+      <div class="listing-grid" id="grille-recentes"></div>
+    </div>
+  </section>
+
+  <section class="section section-border-top section-tight">
+    <div class="container">
+      <div class="section-head">
+        <h2>Comment ça marche</h2>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <h3>Parcourez les annonces</h3>
+          <p>Filtrez par quartier, prix et type de logement pour trouver ce qui vous correspond.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <h3>Contactez le propriétaire</h3>
+          <p>Un seul bouton pour écrire directement sur WhatsApp, sans étape intermédiaire.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <h3>Visitez et emménagez</h3>
+          <p>Convenez d'une visite avec le propriétaire et finalisez la location entre vous.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-border-top">
+    <div class="container">
+      <div class="cta-band">
+        <div>
+          <h2>Vous avez un logement à louer ?</h2>
+          <p>Déposez votre annonce en quelques minutes, c'est gratuit.</p>
+        </div>
+        <a href="deposer.html" class="btn btn-primary">Déposer une annonce</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>Abri Direct — Songon Agban &amp; route de Dabou</span>
+      <span>&copy; 2026</span>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    // Affiche les 3 annonces les plus récentes (ou boostées en priorité)
+    const recentes = trierParBoostPuisDate(getAnnonces()).slice(0, 3);
+    afficherAnnonces(recentes, "grille-recentes");
+
+    function lancerRecherche(e) {
+      e.preventDefault();
+      const quartier = document.getElementById("s-quartier").value;
+      const type = document.getElementById("s-type").value;
+      const prix = document.getElementById("s-prix").value;
+      const params = new URLSearchParams();
+      if (quartier) params.set("quartier", quartier);
+      if (type) params.set("type", type);
+      if (prix) params.set("prixMax", prix);
+      window.location.href = "annonces.html?" + params.toString();
+    }
+  </script>
+</body>
+</html>

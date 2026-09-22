@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Déposer une annonce — Abri Direct</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container">
+      <a href="index.html" class="logo">Abri<span>Direct</span></a>
+      <nav class="main-nav">
+        <a href="index.html">Accueil</a>
+        <a href="annonces.html">Annonces</a>
+        <a href="deposer.html" class="btn-nav" aria-current="page">Déposer une annonce</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="section-tight">
+    <div class="container">
+      <h1 style="font-size:1.8rem;">Déposer une annonce</h1>
+      <p style="color:var(--muted); max-width:56ch; margin-bottom:28px;">
+        Votre annonce sera visible immédiatement sur le site. Les locataires vous contacteront directement sur WhatsApp.
+      </p>
+
+      <div class="form-panel">
+        <div class="form-success" id="form-success">
+          Votre annonce a été publiée. <a href="annonces.html">Voir les annonces</a>
+        </div>
+
+        <form id="form-annonce" onsubmit="soumettreAnnonce(event)">
+          <div class="field">
+            <label for="titre">Titre de l'annonce</label>
+            <input type="text" id="titre" required placeholder="Ex : Studio meublé proche du marché" />
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="quartier">Quartier</label>
+              <select id="quartier" required>
+                <option value="">Choisir…</option>
+                <option value="Songon Agban">Songon Agban</option>
+                <option value="Route de Dabou">Route de Dabou</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="type">Type de bien</label>
+              <select id="type" required>
+                <option value="">Choisir…</option>
+                <option value="Studio">Studio</option>
+                <option value="Chambre">Chambre</option>
+                <option value="Appartement">Appartement</option>
+                <option value="Maison">Maison</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="prix">Prix mensuel (FCFA)</label>
+              <input type="number" id="prix" required min="0" step="1000" placeholder="Ex : 50000" />
+            </div>
+            <div class="field">
+              <label for="pieces">Nombre de pièces</label>
+              <input type="number" id="pieces" required min="1" max="10" placeholder="Ex : 2" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="description">Description</label>
+            <textarea id="description" required placeholder="Décrivez le logement : état, équipements, accès, environnement…"></textarea>
+          </div>
+
+          <div class="field">
+            <label for="contact">Numéro WhatsApp</label>
+            <input type="tel" id="contact" required placeholder="Ex : 225 07 00 00 00 00" />
+            <p class="hint">Format international sans le "+", ex : 2250700000000. C'est le numéro que les locataires utiliseront pour vous écrire.</p>
+          </div>
+
+          <div class="field">
+            <label for="photo">Photo du logement</label>
+            <input type="file" id="photo" accept="image/*" />
+            <p class="hint">L'envoi de photo n'est pas encore actif sur cette version du site — elle le sera une fois la base de données connectée.</p>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block">Publier l'annonce</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>Abri Direct — Songon Agban &amp; route de Dabou</span>
+      <span>&copy; 2026</span>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    function soumettreAnnonce(e) {
+      e.preventDefault();
+
+      const nouvelleAnnonce = {
+        titre: document.getElementById("titre").value.trim(),
+        quartier: document.getElementById("quartier").value,
+        type: document.getElementById("type").value,
+        prix: Number(document.getElementById("prix").value),
+        pieces: Number(document.getElementById("pieces").value),
+        description: document.getElementById("description").value.trim(),
+        contact: document.getElementById("contact").value.replace(/\s+/g, ""),
+        boost: false,
+      };
+
+      ajouterAnnonce(nouvelleAnnonce);
+
+      document.getElementById("form-annonce").reset();
+      const success = document.getElementById("form-success");
+      success.classList.add("visible");
+      success.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  </script>
+</body>
+</html>

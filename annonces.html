@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Annonces — Abri Direct</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container">
+      <a href="index.html" class="logo">Abri<span>Direct</span></a>
+      <nav class="main-nav">
+        <a href="index.html">Accueil</a>
+        <a href="annonces.html" aria-current="page">Annonces</a>
+        <a href="deposer.html" class="btn-nav">Déposer une annonce</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="section-tight">
+    <div class="container">
+      <h1 style="font-size:1.8rem; margin-bottom:24px;">Toutes les annonces</h1>
+
+      <form class="filters" id="filter-form" onsubmit="return false;">
+        <select id="f-quartier" onchange="appliquerFiltres()">
+          <option value="">Tous les quartiers</option>
+          <option value="Songon Agban">Songon Agban</option>
+          <option value="Route de Dabou">Route de Dabou</option>
+        </select>
+        <select id="f-type" onchange="appliquerFiltres()">
+          <option value="">Tous les types</option>
+          <option value="Studio">Studio</option>
+          <option value="Chambre">Chambre</option>
+          <option value="Appartement">Appartement</option>
+          <option value="Maison">Maison</option>
+        </select>
+        <select id="f-pieces" onchange="appliquerFiltres()">
+          <option value="">Nombre de pièces</option>
+          <option value="1">1 pièce</option>
+          <option value="2">2 pièces</option>
+          <option value="3">3 pièces et +</option>
+        </select>
+        <input type="number" id="f-prix" placeholder="Prix max (FCFA)" min="0" step="1000" oninput="appliquerFiltres()" />
+      </form>
+
+      <p class="results-count" id="results-count"></p>
+
+      <div class="listing-grid" id="grille-annonces"></div>
+
+      <div class="empty-state" id="empty-state" style="display:none;">
+        <h3>Aucune annonce ne correspond</h3>
+        <p>Essayez d'élargir vos filtres, ou déposez la vôtre si vous êtes propriétaire.</p>
+        <a href="deposer.html" class="btn btn-outline">Déposer une annonce</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>Abri Direct — Songon Agban &amp; route de Dabou</span>
+      <span>&copy; 2026</span>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    // Pré-remplit les filtres à partir des paramètres d'URL (venant de la recherche sur l'accueil)
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("quartier")) document.getElementById("f-quartier").value = params.get("quartier");
+    if (params.get("type")) document.getElementById("f-type").value = params.get("type");
+    if (params.get("prixMax")) document.getElementById("f-prix").value = params.get("prixMax");
+
+    function appliquerFiltres() {
+      const quartier = document.getElementById("f-quartier").value;
+      const type = document.getElementById("f-type").value;
+      const pieces = document.getElementById("f-pieces").value;
+      const prixMax = document.getElementById("f-prix").value;
+
+      let resultats = trierParBoostPuisDate(getAnnonces()).filter((a) => {
+        if (quartier && a.quartier !== quartier) return false;
+        if (type && a.type !== type) return false;
+        if (pieces === "3" && a.pieces < 3) return false;
+        if (pieces && pieces !== "3" && a.pieces !== Number(pieces)) return false;
+        if (prixMax && a.prix > Number(prixMax)) return false;
+        return true;
+      });
+
+      document.getElementById("results-count").textContent =
+        resultats.length + " annonce" + (resultats.length > 1 ? "s" : "") + " trouvée" + (resultats.length > 1 ? "s" : "");
+
+      afficherAnnonces(resultats, "grille-annonces", "empty-state");
+    }
+
+    appliquerFiltres();
+  </script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title id="page-title">Annonce — Abri Direct</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container">
+      <a href="index.html" class="logo">Abri<span>Direct</span></a>
+      <nav class="main-nav">
+        <a href="index.html">Accueil</a>
+        <a href="annonces.html">Annonces</a>
+        <a href="deposer.html" class="btn-nav">Déposer une annonce</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="section-tight">
+    <div class="container" id="contenu-annonce">
+      <!-- Rempli par JS -->
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>Abri Direct — Songon Agban &amp; route de Dabou</span>
+      <span>&copy; 2026</span>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    const id = new URLSearchParams(window.location.search).get("id");
+    const annonce = id ? getAnnonceParId(id) : null;
+    const conteneur = document.getElementById("contenu-annonce");
+
+    if (!annonce) {
+      conteneur.innerHTML = `
+        <a href="annonces.html" class="back-link">&larr; Retour aux annonces</a>
+        <div class="empty-state">
+          <h3>Cette annonce n'existe pas ou plus</h3>
+          <p>Elle a peut-être été retirée par le propriétaire.</p>
+          <a href="annonces.html" class="btn btn-outline">Voir les autres annonces</a>
+        </div>`;
+    } else {
+      document.getElementById("page-title").textContent = annonce.titre + " — Abri Direct";
+
+      const messageWhatsapp = encodeURIComponent(
+        "Bonjour, je vous contacte au sujet de votre annonce \"" + annonce.titre + "\" sur Abri Direct."
+      );
+      const lienWhatsapp = "https://wa.me/" + annonce.contact + "?text=" + messageWhatsapp;
+
+      conteneur.innerHTML = `
+        <a href="annonces.html" class="back-link">&larr; Retour aux annonces</a>
+        <div class="detail-layout">
+          <div>
+            <div class="detail-photo">${ICONE_MAISON}</div>
+            <h1 style="margin-top:24px; font-size:1.7rem;">${annonce.titre}</h1>
+            <p style="color:var(--muted); margin-bottom:20px;">${annonce.quartier}</p>
+            <p>${annonce.description}</p>
+          </div>
+          <div class="detail-panel">
+            ${annonce.boost ? '<span class="badge-boost" style="position:static; display:inline-block; margin-bottom:12px;">En avant</span>' : ""}
+            <div class="detail-price">${formatPrix(annonce.prix)}</div>
+            <p style="color:var(--muted); margin:0 0 16px;">par mois</p>
+            <ul class="detail-facts">
+              <li><span>Type de bien</span><span>${annonce.type}</span></li>
+              <li><span>Pièces</span><span>${annonce.pieces}</span></li>
+              <li><span>Quartier</span><span>${annonce.quartier}</span></li>
+            </ul>
+            <a href="${lienWhatsapp}" target="_blank" rel="noopener" class="btn btn-whatsapp">Contacter sur WhatsApp</a>
+          </div>
+        </div>`;
+    }
+  </script>
+</body>
+</html>
